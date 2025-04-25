@@ -1,0 +1,5 @@
+config,drop_outliers,model_type,mse,r2
+LR without Outlier,False,linear_regression,859896.5132646401,0.00885155876765975
+LR with Outlier,True,linear_regression,886245.7255585679,-0.02151951529760887
+RF without Outlier,False,random_forest,1091222.345252412,-0.2577831283774108
+RF with Outlier,True,random_forest,872641.8132300304,-0.005839144123755968
