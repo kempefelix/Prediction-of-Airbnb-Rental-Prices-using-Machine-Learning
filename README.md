@@ -1,37 +1,85 @@
-# Prediction-of-Airbnb-Rental-Prices-using-Machine-Learning
-Data Stewardship Part2 - Prediction of Airbnb Rental Prices using Machine Learning
+# Prediction-of-Airbnb-Rental-Prices-using-Machine-Learning  
+**Data Stewardship Part 2**
 
--- Part2: --
-In the GitHub repository (https://github.com/kempefelix/Prediction-of-Airbnb-Rental-Prices-using-Machine-Learning), only the files directly relevant to the modeling are included for storage reasons; the full datasets are not checked in. The original CSV AB_US_2023.csv (raw_data), the cleaned version AB_US_2023_DATA_CLEANED.csv (data/mid_processing), and the preprocessed file AB_US_2023_PROCESSED.csv (data/processed_data) are omitted due to their large size. They can instead be downloaded via the following link and placed into the corresponding directories:
-https://tuwienacat-my.sharepoint.com/:f:/g/personal/e12327971_student_tuwien_ac_at/Ei4OQwdYYXJBvkgyrpgQOkMBmbvwrhTqC6YCQP6Q8UtzQQ?e=7Hd7tC
+---
 
-For the actual modeling, predefined subsamples in data/sampled_data—already stratified, split, and uploaded to DBRepo (since DBRepo(https://test.dbrepo.tuwien.ac.at/database/20007276-c04a-4c21-b12f-5aed3fe39388/info) does not support dataset splits natively)—are used to reduce data volume.
+## Repository overview  
+This GitHub repo contains only the files necessary for modeling. Large raw and intermediate CSVs are not checked in for storage space reasons and must be downloaded via OneDrive/SharePoint.
 
-The machine-learning pipeline in Modeling_Regression.ipynb employs a RandomForestRegressor with three hyperparameters and conducts a 10-fold cross-validation tuning exclusively on the training data. Because cross-validation automatically handles the train/validation split, the raw data are not manually subdivided into training, validation, and test sets; only a training set and a separate test set exist.
+### Folder structure 
+├── data/
+│   ├── raw/                 # placeholder for AB_US_2023.csv
+│   ├── mid_processing/      # placeholder for AB_US_2023_DATA_CLEANED.csv
+│   ├── processed_data/      # placeholder for AB_US_2023_PROCESSED.csv
+│   └── sampled_data/        # stratified subsamples (train/test), versioned in DBRepo
+├── data/zcta/               # ZCTA shapefiles for ZIP-code encoding
+├── results/                 # final artifacts: models, plots, test_metrics.csv
+├── report/                  # detailed PDF report
+│   └── Prediction of Airbnb Rental Prices using Machine Learning.pdf
+├── Data_Exploration.ipynb
+├── Pre_processing.ipynb
+├── ZIP-Code encoding.ipynb
+├── Modeling_Regression.ipynb
+└── README.md
+---
 
-For Part 2 of the exercise, only Modeling_Regression.ipynb is relevant: it loads the training and test data via the DBRepo API, runs the training, and saves all outputs—the trained model, the residual and histogram plots, the true-vs-predicted plots, and a CSV of the final metrics—in the results/ folder at the project root. All other notebooks in the repository are provided for context; to run them you must first download the large data files and adjust the marked file paths in their cells.
---
 
 
+## Downloading Large Data Files  
+1. **Raw and Intermediate CSVs**  
+   - **Link (OneDrive/SharePoint):**  
+     `https://tuwienacat-my.sharepoint.com/:f:/g/personal/e12327971_student_tuwien_ac_at/Ei4OQwdYYXJBvkgyrpgQOkMBmbvwrhTqC6YCQP6Q8UtzQQ?e=7Hd7tC`  
+   - Targets:  
+     - `data/raw/AB_US_2023.csv`  
+     - `data/mid_processing/AB_US_2023_DATA_CLEANED.csv`  
+     - `data/processed_data/AB_US_2023_PROCESSED.csv`  
 
+2. **ZCTA Shapefile**  
+   - **Link:**  
+     `https://tuwienacat-my.sharepoint.com/:u:/g/personal/e12327501_student_tuwien_ac_at/EdmpPAIWJdlBhMZFuD4YQUkBdLmbF7EOSdesEdLkq7z3bA?e=5iD0J0`  
+   - Place contents into `data/zcta/`
 
+---
 
+## Versioned Subsamples in DBRepo  
+Because DBRepo does not support splits in its GUI, the stratified training and test subsamples were generated locally in `data/sampled_data/` and then uploaded to **DBRepo**. In **Modeling_Regression.ipynb**, they are retrieved via the API:
 
--- RUN NOTEBOOKS --
-There are two distinct ways of reproducing the Results outlined in the report.
+- **Train-Split PID:**  
+  `https://test.dbrepo.tuwien.ac.at/.../subset/6a811a49-2142-11f0-8d13-0e8cdc00dc05/info`  
+- **Test-Split PID:**  
+  `https://test.dbrepo.tuwien.ac.at/.../subset/3b1a9519-2142-11f0-8d13-0e8cdc00dc05/info`
 
-The "Modeling_Regression" Notebook can be directly executed using Template data, or the entire exploration and 
-preprocessing workflow can be applied before executing the Regression Analysis
+---
 
-Type 1: Standalone Regression Analysis
-    Simply execute the Notebook "Modeling_Regression" as-is.
+## Running the Notebooks  
 
-Type 2: Replicate entire Workflow
-1. download ZCTA data from the "here -> https://tuwienacat-my.sharepoint.com/:u:/g/personal/e12327501_student_tuwien_ac_at/EdmpPAIWJdlBhMZFuD4YQUkBdLmbF7EOSdesEdLkq7z3bA?e=5iD0J0"
-and drop into the folder "data/zcta"
-2. Execute "Data_Exploration.ipynb" (optional)
-3. Execute "Pre_processing.ipynb"
-4. Execute "ZIP-Code encoding.ipynb"
-5. Change filepath in "Modeling_Regression.ipynb" to "data/processed_data/AB_US_2023_PROCESSED"
-6. Execute "Modeling_Regression.ipynbws "
---
+### Type 1: Standalone Regression Analysis  
+1. Clone the GitHub repository and configure your DBRepo API credentials.  
+2. In **Modeling_Regression.ipynb**, execute the cells that start with `%pip install`.  
+3. Run the notebook — the results will be saved in the `results/` folder.
+
+### Type 2: Full Workflow Replication  
+1. Download the large CSVs and ZCTA shapefile and place them under `data/`.  
+2. In each notebook, run the `%pip install` cells.  
+3. Execute **Data_Exploration.ipynb** (optional).  
+4. Execute **Pre_processing.ipynb** to generate `AB_US_2023_DATA_CLEANED.csv`.  
+5. Execute **ZIP-Code encoding.ipynb** to update `AB_US_2023_PROCESSED.csv`.  
+6. In **Modeling_Regression.ipynb**, verify the filepath to `data/processed_data/AB_US_2023_PROCESSED.csv`.  
+7. Run **Modeling_Regression.ipynb** — the models, plots, and `test_metrics.csv` will appear in `results/`.
+
+---
+
+## Results and Artifacts  
+The `results/` folder will automatically contain:  
+- **Models + Scalers:** `.pkl` files  
+- **Performance Metrics:** `test_metrics.csv`  
+- **Plots:** residuals, histograms, and true-vs-predicted visualizations as `.png`
+
+These files can then be manually uploaded to TUWRD to obtain a DOI for the results archive.
+
+---
+
+## Environment & Dependencies  
+- Python ≥ 3.8  
+- Install requirements by running the %pip install cells in each notebook.
+- Git is needed to clone and version-control the repository.
